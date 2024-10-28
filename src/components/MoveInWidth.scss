@@ -1,0 +1,40 @@
+.container {
+    overflow: hidden;
+    position: relative;
+
+    &.position-static {
+        position: static;
+    }
+
+    &.position-fixed {
+        position: fixed;
+    }
+
+    &.position-absolute {
+        position: absolute;
+        bottom: 0;
+    }
+
+    height: 100vh;
+}
+
+.displayedWrapper {
+    display: inline-block;
+    height: 100vh;
+    transition: transform 0.3s ease; // 增加平滑的動畫效果
+
+    // 確保圖片不變形，並使用 object-fit 保持圖片的比例
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; // 確保圖片會保持原比例而不變形
+    }
+
+    &.translate-full {
+        transform: translateX(-100%);
+    }
+
+    &.translate-partial {
+        transform: translateX(calc(-100% * ((100vw - 100%) / 100vw)));
+    }
+}

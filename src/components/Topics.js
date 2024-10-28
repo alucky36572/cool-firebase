@@ -3,6 +3,7 @@ import firebase from "../utils/firebase";
 import { useEffect, useState } from "react";
 import 'firebase/firestore';
 import { Link, useLocation } from "react-router-dom";
+// import './Topics.scss';
 
 
 function Topics() {
@@ -19,9 +20,11 @@ function Topics() {
                 const data = collectionSnapshot.docs.map((doc) => {
                     return doc.data();
                 });
-                setTopics(data);
+                setTopics([{ name: '全部' }, ...data]);
             });
     }, []);
+
+    
     return (
         <List animated selection>
             {topics.map(topic => {
@@ -29,8 +32,9 @@ function Topics() {
                     <List.Item
                         key={topic.name}
                         as={Link}
-                        to={`/posts?topic=${topic.name}`}
-                        active={currentTopic === topic.name}
+                        to={`/posts${topic.name === '全部' ? '#' : '?topic=' + topic.name}`}
+                        active={currentTopic === topic.name || (currentTopic === null && topic.name === '全部')}
+                        className="listItem"
                     >
                         {topic.name}
                     </List.Item>

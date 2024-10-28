@@ -1,4 +1,4 @@
-import { Header, Button, Segment, Modal, Input, Image } from "semantic-ui-react";
+import { Header, Button, Segment, Modal, Input, Image, Message } from "semantic-ui-react";
 import firebase from "../utils/firebase";
 import { useState } from "react";
 
@@ -111,22 +111,48 @@ function MyPassword({user}) {
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [passwordStrength, setPasswordStrength] = useState("");
+
+    function checkPasswordStrength(password) {
+        if(password.length < 6) {
+            return "密碼至少6個字元";
+        }
+        return "";
+    }
 
     function onSubmit() {
+        setError("");
         setIsLoading(true);
+
+        const strengthMessage = checkPasswordStrength(newPassword);
+        if(strengthMessage) {
+            setIsLoading(false);
+            setError(strengthMessage);
+            return;
+        }
+
         const credential = firebase.auth.EmailAuthProvider.credential(
             user.email, 
             oldPassword
         ) //原始帳號及密碼會員認證
+
         user.reauthenticateWithCredential(credential).then(() => {
             user.updatePassword(newPassword).then(() => {
                 setIsLoading(false);
                 setIsModalOpen(false);
                 setOldPassword("");
-                setNewPassword("")
-            })
-        })
-        user.updatePassword(newPassword);
+                setNewPassword("");
+                setPasswordStrength("");
+            }).catch((error) => {
+                setIsLoading(false);
+                setError("無法更新密碼，請稍後再試");
+            });
+        }).catch((error) => {
+            setIsLoading(false);
+            setError("原密碼輸入錯誤，請重新輸入");
+        });
+        // user.updatePassword(newPassword);
     }
 
     return(
@@ -152,9 +178,18 @@ function MyPassword({user}) {
                     <Input
                         placeholder='請輸入新密碼'
                         value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
+                        onChange={(e) => {
+                            setNewPassword(e.target.value)
+                            setPasswordStrength(checkPasswordStrength(e.target.value))
+                            }}
                         fluid
                     />
+                    {passwordStrength && (
+                        <Message warning content={passwordStrength}></Message>
+                    )}
+                    {error && (
+                        <Message negative content={error}></Message>
+                    )}
                 </Modal.Content>
                 <Modal.Actions>
                     <Button onClick={() => setIsModalOpen(false)}>取消</Button>

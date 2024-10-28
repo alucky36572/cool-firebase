@@ -20,7 +20,8 @@ function Signin() {
                 .auth()
                 .createUserWithEmailAndPassword(email, password)
                 .then(() => {
-                    navigate("/posts");
+                    navigate("/my/settings");
+                    alert("可以先修改會員名稱及照片哦!")
                     setIsLoading(false)
                 })
                 .catch((error) => {
@@ -32,7 +33,7 @@ function Signin() {
                             setErrorMessage("信箱格式不正確");
                             break;
                         case "auth/weak-password":
-                            setErrorMessage("密碼強度不足");
+                            setErrorMessage("密碼的最小長度為 6 個字符");
                             break;
                         default:
                     }

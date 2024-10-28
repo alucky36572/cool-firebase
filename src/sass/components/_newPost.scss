@@ -1,0 +1,26 @@
+.ui.button {
+    font-size: 1.2rem;
+}
+
+.form__group {
+    font-size: 1.2rem;
+}
+
+.form__input {
+    font-size: 1.2rem;
+}
+
+.form__label {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+    display: block;
+    transition: all .3s;
+}
+
+.form__input:placeholder-shown + .form__label {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4rem);
+}

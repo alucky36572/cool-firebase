@@ -1,4 +1,6 @@
-import Header from './Header';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Index from './pages/Index';
 import { BrowserRouter, Route, Routes, Navigate, Outlet } from 'react-router-dom';
 
 import Signin from './pages/Signin';
@@ -14,6 +16,7 @@ import { useState, useEffect } from 'react';
 import { Container, Grid } from 'semantic-ui-react';
 import firebase from './utils/firebase';
 import MyMenu from './components/MyMenu';
+import './sass/main.scss';
 
 function App() {
     const [user, setUser] = useState();
@@ -27,6 +30,7 @@ function App() {
         <BrowserRouter>
             <Header user={user} />
             <Routes>
+                <Route path="/" element={<Index user={user} />} />
                 <Route path="/posts" element={
                     <Container>
                         <Grid>
@@ -43,10 +47,10 @@ function App() {
                     </Container>
                 }>
                     <Route index element={<Posts />} />
-                    <Route path=":postId" element={user !== null ? <Post /> : <Navigate to="/posts" />} />
+                    <Route path=":postId" element={user !== null ? <Post /> : <Navigate to="/signin" />} />
                 </Route>
 
-                <Route path="/my" element={user !== null ? (
+                <Route path="/my/*" element={user !== null ? (
                     <Container>
                         <Grid>
                             <Grid.Row>
@@ -60,15 +64,17 @@ function App() {
                             </Grid.Row>
                         </Grid>
                     </Container>
-                ) : <Navigate to="/posts" />}>
+                ) : <Navigate to="/signin" />}>
                     <Route path="posts" element={<MyPosts />} />
                     <Route path="collections" element={<MyCollections />} />
                     <Route path="settings" element={<MySettings user={user} />} />
                 </Route>
 
-                <Route path="/signin" element={user !== null ? <Navigate to="/posts" /> : <Signin />} />
-                <Route path="/new-post" element={user !== null ? <NewPost /> : <Navigate to="/posts" />} />
+                <Route path="/signin" element={<Signin />} />
+                {/* <Route path="/signin" element={user !== null ? <Navigate to="/posts" /> : <Signin />} /> */}
+                <Route path="/new-post" element={user !== null ? <NewPost /> : <Navigate to="/signin" />} />
             </Routes>
+            <Footer />
         </BrowserRouter>
 
     )

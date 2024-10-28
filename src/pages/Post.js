@@ -1,6 +1,6 @@
 import { Image, Header, Segment, Icon, Comment, Form } from "semantic-ui-react";
 import firebase from "../utils/firebase";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export default function Post() {
@@ -11,6 +11,8 @@ export default function Post() {
     const [commentContent, setCommentContent] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [comments, setComments] = useState([]);
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         firebase
@@ -83,9 +85,9 @@ export default function Post() {
             setCommentContent('');
             setIsLoading(false);
         })
-
-
     }
+
+    
 
     return (
         <>
@@ -95,14 +97,14 @@ export default function Post() {
                 <Icon name="user circle" />
             )}
             {post.author.displayName || '使用者'}
-            <Header>
+            <Header >
                 {post.title}
                 <Header.Subheader>
-                    {post.topic}.{post.createdAt?.toDate().toLocaleDateString()}
+                    {post.topic} .程度{post.level} .{post.createdAt?.toDate().toLocaleDateString()}
                 </Header.Subheader>
             </Header>
             <Image src={post.imageUrl} />
-            <Segment basic vertical>{post.content}</Segment>
+            <Segment basic vertical style={{ fontSize: '1.5rem' }}>{post.content}</Segment>
             <Segment basic vertical>
                 留言 {post.commentsCount || 0}．讚 {post.likedBy?.length || 0}．
                 <Icon
@@ -112,7 +114,7 @@ export default function Post() {
                     onClick={() => toggle(isLiked, 'likedBy')}
                 />．
                 <Icon
-                    name={`bookmark${isCollected ? '' : ' outline'} `}
+                    name={`bookmark${isCollected ? '' : ' outline'}`}
                     color={isCollected ? 'blue' : "grey"}
                     link
                     onClick={() => toggle(isCollected, 'collectedBy')}
@@ -144,6 +146,8 @@ export default function Post() {
                     )
                 })}
             </Comment.Group>
+
+            <Form.Button onClick={() => navigate('/posts')}>回前頁</Form.Button>
         </>
     )
 }
