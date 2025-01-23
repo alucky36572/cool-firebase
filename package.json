@@ -1,11 +1,14 @@
 {
   "name": "cool",
+  "homepage": "https://alucky36572.github.io/emotion-firebase",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "compile:sass": "sass sass/main.scss css/style.css"
+    "compile:sass": "sass sass/main.scss css/style.css",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +16,7 @@
   "description": "",
   "dependencies": {
     "firebase": "^10.12.3",
+    "gh-pages": "^6.3.0",
     "highcharts": "^11.4.8",
     "highcharts-more": "^0.1.7",
     "highcharts-react-official": "^3.2.1",
